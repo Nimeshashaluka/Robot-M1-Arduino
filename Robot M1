@@ -1,0 +1,214 @@
+#include <ESP32Servo.h>
+#include <WiFi.h>
+
+NetworkServer server = NetworkServer(80);
+Servo myServo1 = Servo();  // Create a Servo object left1
+Servo myServo2 = Servo();  // Create a Servo object left2
+Servo myServo3 = Servo();  // Create a Servo object right1
+Servo myServo4 = Servo();  // Create a Servo object right2
+
+void setup() {
+  Serial.begin(115200);
+
+  myServo1.attach(13);  // Attach the servo to pin 13
+  myServo2.attach(12);  // Attach the servo to pin 9
+
+  myServo3.attach(14);  // Attach the servo to pin 6
+  myServo4.attach(27);  // Attach the servo to pin 5
+
+  // pinMode(13, OUTPUT);
+  WiFi.begin("Mr_Fix", "Nimesh%$#10");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print("Connecting...");
+  }
+  Serial.println("Connected to WiFi");
+
+  server.begin();
+  Serial.println("Server Started");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+  NetworkClient client = server.accept();
+
+  if (client) {
+
+    String requestText = "";
+
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+        requestText += c;
+
+        if (c == '\n') {
+          Serial.println(requestText);
+
+          if (requestText.startsWith("GET /?state=1")) {
+            // digitalWrite(13, HIGH);
+
+            // left
+            for (int pos = 50; pos >= 10; pos--) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            for (int pos = 0; pos <= 50; pos++) {
+              myServo2.write(pos);
+              delay(15);
+            }
+            for (int pos = 10; pos <= 50; pos++) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            for (int pos = 50; pos >= 0; pos--) {
+              myServo2.write(pos);
+              delay(15);
+            }
+            // // -----right------
+
+            for (int pos = 70; pos <= 110; pos++) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            for (int pos = 90; pos >= 50; pos--) {
+              myServo4.write(pos);
+              delay(15);
+            }
+            for (int pos = 110; pos >= 70; pos--) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            for (int pos = 50; pos <= 90; pos++) {
+              myServo4.write(pos);
+              delay(15);
+            }
+
+          } else if (requestText.startsWith("GET /?state=2")) {
+            // digitalWrite(13, LOW);
+            for (int pos = 60; pos >= 10; pos--) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            delay(500);
+            for (int pos = 10; pos <= 60; pos++) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+
+
+          } else if (requestText.startsWith("GET /?state=3")) {
+            // digitalWrite(13, LOW);
+
+            // left
+            for (int pos = 50; pos >= 10; pos--) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            for (int pos = 0; pos <= 50; pos++) {
+              myServo2.write(pos);
+              delay(15);
+            }
+            for (int pos = 10; pos <= 50; pos++) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            for (int pos = 50; pos >= 0; pos--) {
+              myServo2.write(pos);
+              delay(15);
+            }
+            // // -----right------
+
+            for (int pos = 70; pos <= 110; pos++) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            for (int pos = 90; pos >= 50; pos--) {
+              myServo4.write(pos);
+              delay(15);
+            }
+            for (int pos = 110; pos >= 70; pos--) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            for (int pos = 50; pos <= 90; pos++) {
+              myServo4.write(pos);
+              delay(15);
+            }
+
+            // left
+            for (int pos = 50; pos >= 10; pos--) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            for (int pos = 0; pos <= 50; pos++) {
+              myServo2.write(pos);
+              delay(15);
+            }
+            for (int pos = 10; pos <= 50; pos++) {
+              myServo1.write(pos);
+              delay(15);
+            }
+
+            for (int pos = 50; pos >= 0; pos--) {
+              myServo2.write(pos);
+              delay(15);
+            }
+            // // -----right------
+
+            for (int pos = 70; pos <= 110; pos++) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            for (int pos = 90; pos >= 50; pos--) {
+              myServo4.write(pos);
+              delay(15);
+            }
+            for (int pos = 110; pos >= 70; pos--) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            for (int pos = 50; pos <= 90; pos++) {
+              myServo4.write(pos);
+              delay(15);
+            }
+
+          } else if (requestText.startsWith("GET /?state=4")) {
+            // digitalWrite(13, LOW);
+            for (int pos = 70; pos <= 130; pos++) {
+              myServo3.write(pos);
+              delay(15);
+            }
+            delay(500);
+            for (int pos = 130; pos >= 70; pos--) {
+              myServo3.write(pos);
+              delay(15);
+            }
+
+
+          } else if (requestText.startsWith("GET /?state=0")) {
+            // digitalWrite(13, LOW);
+            myServo1.write(50);
+            myServo2.write(0);
+
+            myServo3.write(70);
+            myServo4.write(90);
+
+
+          } else {
+            Serial.println("noo");
+          }
+          break;
+        }
+      }
+    }
+    client.stop();
+  }
+}
